@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { breakPuzzle, generatePuzzles, testDES } from './shared/puzzle';
+import { breakPuzzle, generatePuzzles } from './shared/puzzle';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     let {msgs, keys} = generatePuzzles();
-    breakPuzzle(msgs, keys);
+    breakPuzzle(msgs);
 
     // testDES();
   }
