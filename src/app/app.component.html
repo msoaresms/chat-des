@@ -1,16 +1,18 @@
 <div class="padding">
   <div class="container">
     <div class="row">
-      <div class="col-12">
-        <div class="card sent">
-          <div class="card-body">This is some text within a card body.</div>
+      <ng-template *ngFor="let message of messages">
+        <div class="col-12">
+          <div class="card sent">
+            <div class="card-body">This is some text within a card body.</div>
+          </div>
         </div>
-      </div>
-      <div class="col-12">
+      </ng-template>
+      <!-- <div class="col-12">
         <div class="card received">
           <div class="card-body">This is some text within a card body.</div>
         </div>
-      </div>
+      </div> -->
     </div>
     <form [formGroup]="chatForm" class="row">
       <div class="col">
