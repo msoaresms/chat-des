@@ -1,0 +1,19 @@
+.padding {
+  padding-left: 30rem;
+  padding-right: 30rem;
+
+  .card {
+    margin-bottom: 0.5rem;
+  }
+
+  .sent {
+    margin-left: 10rem;
+    background-color: #f39c12;
+    text-align: right;
+  }
+
+  .received {
+    margin-right: 10rem;
+    background-color: #d2d6de;
+  }
+}
