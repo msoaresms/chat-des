@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
+import { PageScrollService } from 'ngx-page-scroll-core';
 import { breakPuzzle, generatePuzzles } from './shared/puzzle';
 
 @Component({
@@ -17,15 +18,20 @@ export class AppComponent implements OnInit {
     client: new FormControl(this.clientId, [Validators.required]),
   });
 
-  constructor(private mqttService: MqttService) {}
+  constructor(
+    private mqttService: MqttService,
+    private pageScrollService: PageScrollService
+  ) {}
 
   ngOnInit() {
     this.mqttService.observe('chat_des').subscribe((message: IMqttMessage) => {
       if (!message.retain) {
         let messageReceveid = JSON.parse(message.payload.toString());
         this.messages.push(messageReceveid);
+        this.pageScrollService.scroll
+        // this.chatForm.controls.message.setValue("");
         //@ts-ignore
-        document.getElementById("messages")?.scrollTop(document.getElementById("messages")[0]?.scrollHeight);
+        // document.getElementById("messages")?.scrollTop(document.getElementById("messages")[0]?.scrollHeight);
       }
     });
     // let { msgs, keys } = generatePuzzles();
