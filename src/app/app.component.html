@@ -1,25 +1,23 @@
 <div class="padding">
   <div class="container">
-    <div class="row">
-      <ng-template *ngFor="let message of messages">
-        <div class="col-12">
-          <div class="card sent">
-            <div class="card-body">This is some text within a card body.</div>
-          </div>
+    <div class="row messages" id="messages">
+      <div class="col-12" *ngFor="let message of messages">
+        <div
+          class="card"
+          [ngClass]="message.client == clientId ? 'sent' : 'received'"
+        >
+          <div class="card-body">{{ message.message }}</div>
         </div>
-      </ng-template>
-      <!-- <div class="col-12">
-        <div class="card received">
-          <div class="card-body">This is some text within a card body.</div>
-        </div>
-      </div> -->
+      </div>
     </div>
-    <form [formGroup]="chatForm" class="row">
+    <form [formGroup]="chatForm" class="row" (ngSubmit)="sendMessage()">
       <div class="col">
         <input type="text" class="form-control" formControlName="message" />
       </div>
       <div class="col-auto">
-        <button class="btn btn-primary">ENVIAR</button>
+        <button [disabled]="!chatForm.valid" class="btn btn-primary">
+          ENVIAR
+        </button>
       </div>
     </form>
   </div>

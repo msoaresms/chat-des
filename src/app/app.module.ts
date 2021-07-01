@@ -8,6 +8,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: 'localhost',
   port: 1883,
   path: '',
+  protocol: 'ws'
 };
 
 @NgModule({

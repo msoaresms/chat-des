@@ -1,6 +1,28 @@
 .padding {
   padding-left: 30rem;
   padding-right: 30rem;
+  padding-top: 1rem;
+
+  .container {
+    border: solid 1px black;
+    height: 45rem;
+    border-radius: 1%;
+    position: relative;
+
+    .messages {
+      max-height: 42rem;
+      overflow: visible;
+      position: absolute;
+      width: 100%;
+      bottom: 2.75rem;
+    }
+
+    form {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  }
 
   .card {
     margin-bottom: 0.5rem;
