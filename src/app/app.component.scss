@@ -2,40 +2,45 @@
   padding-left: 30rem;
   padding-right: 30rem;
   padding-top: 1rem;
+  padding-bottom: 1rem;
 
   .container {
     border: solid 1px black;
-    height: 45rem;
+    height: calc(100vh - 2rem);
     border-radius: 1%;
-    position: relative;
+    // position: relative;
 
-    .messages {
-      max-height: 42rem;
-      overflow: auto;
-      position: absolute;
-      width: 100%;
-      bottom: 2.75rem;
+    .full-height {
+      height: calc(100vh - 2rem);
     }
 
-    form {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-    }
+    // .messages {
+    //   max-height: 42rem;
+    //   overflow: auto;
+    //   position: absolute;
+    //   width: 100%;
+    //   bottom: 2.75rem;
+    // }
+
+    // form {
+    //   position: absolute;
+    //   bottom: 0;
+    //   width: 100%;
+    // }
   }
 
-  .card {
-    margin-bottom: 0.5rem;
-  }
+  // .card {
+  //   margin-bottom: 0.5rem;
+  // }
 
-  .sent {
-    margin-left: 10rem;
-    background-color: #f39c12;
-    text-align: right;
-  }
+  // .sent {
+  //   margin-left: 10rem;
+  //   background-color: #f39c12;
+  //   text-align: right;
+  // }
 
-  .received {
-    margin-right: 10rem;
-    background-color: #d2d6de;
-  }
+  // .received {
+  //   margin-right: 10rem;
+  //   background-color: #d2d6de;
+  // }
 }

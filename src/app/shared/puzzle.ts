@@ -1,6 +1,6 @@
 import { DES, enc } from 'crypto-js';
 
-const NUM_PUZZLE = 10000;
+const NUM_PUZZLE = 150;
 const SUFIX = '000000000000000000000';
 
 export function generatePuzzles() {
@@ -27,7 +27,7 @@ export function breakPuzzle(puzzles: any) {
 
   let i = 0;
   let found = false;
-  let msg = "";
+  let msg = '';
   do {
     try {
       msg = DES.decrypt(puzzle, i.toString()).toString(enc.Utf8);

@@ -1,1 +1,9 @@
 @import "~bootstrap/scss/bootstrap.scss";
+
+.no-gutters {
+  .col,
+  .col-auto {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
