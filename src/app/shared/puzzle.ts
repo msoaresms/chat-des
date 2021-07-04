@@ -35,10 +35,14 @@ export function breakPuzzle(puzzles: any) {
     } catch (error) {}
     i++;
   } while (!found);
-  return msg;
+  return { key: i - 1, msg };
 }
 
 export function testDES() {
   let msg = DES.encrypt('HELLO WORLD', 'the cake is a lie');
   console.log(DES.decrypt(msg, 'the cake is a lie').toString(enc.Utf8));
+}
+
+export function getMasterKey(msg: any) {
+  return msg.replace(SUFIX, '');
 }

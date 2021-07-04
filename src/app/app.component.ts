@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
-import { PageScrollService } from 'ngx-page-scroll-core';
-import { breakPuzzle, generatePuzzles, testDES } from './shared/puzzle';
+import { DES, enc } from 'crypto-js';
+import { breakPuzzle, generatePuzzles, getMasterKey } from './shared/puzzle';
 
 const CREATE_ROOM_ENDPOINT = 'http://localhost:3000/create-room';
 const ENTER_ROOM_ENDPOINT = 'http://localhost:3000/enter-room';
@@ -14,11 +14,15 @@ const ENTER_ROOM_ENDPOINT = 'http://localhost:3000/enter-room';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  //@ts-ignore
+  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+
   public messages = new Array();
   public clientId = this.mqttService.clientId;
-  public msgs = [];
-  public keys = [];
-  public secrets = [];
+  public msgs: any = [];
+  public keys: any = [];
+  public secrets: any = [];
+  public masterKey = '';
 
   public createRoomForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -34,36 +38,35 @@ export class AppComponent implements OnInit {
     client: new FormControl(this.clientId, [Validators.required]),
   });
 
-  constructor(
-    private mqttService: MqttService,
-    private pageScrollService: PageScrollService,
-    private http: HttpClient
-  ) {}
+  constructor(private mqttService: MqttService, private http: HttpClient) {}
 
   ngOnInit() {
+    this.listenStartChat();
+
     this.mqttService.observe('chat_des').subscribe((message: IMqttMessage) => {
       if (!message.retain) {
         let messageReceveid = JSON.parse(message.payload.toString());
+        messageReceveid = JSON.parse(
+          DES.decrypt(messageReceveid, this.masterKey).toString(enc.Utf8)
+        );
         this.messages.push(messageReceveid);
-        this.pageScrollService.scroll;
-        // this.chatForm.controls.message.setValue("");
-        //@ts-ignore
-        // document.getElementById("messages")?.scrollTop(document.getElementById("messages")[0]?.scrollHeight);
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 1);
       }
     });
-    // let { msgs, keys } = generatePuzzles();
-    // breakPuzzle(msgs);
-    // testDES();
   }
 
   public createRoom() {
     if (this.createRoomForm.valid) {
-      let { secrets, keys, msgs } = generatePuzzles();
+      let puzzles = generatePuzzles();
+      this.msgs = puzzles.msgs;
+      this.secrets = puzzles.secrets;
+      this.keys = puzzles.keys;
+
       let data = this.createRoomForm.value;
-      data.puzzles = JSON.stringify(msgs, this.refReplacer());
-      this.http.post(CREATE_ROOM_ENDPOINT, data).subscribe((result) => {
-        console.log(result);
-      });
+      data.puzzles = JSON.stringify(this.msgs, this.refReplacer());
+      this.http.post(CREATE_ROOM_ENDPOINT, data).subscribe((result) => {});
     }
   }
 
@@ -73,7 +76,7 @@ export class AppComponent implements OnInit {
       this.http
         .get(`${ENTER_ROOM_ENDPOINT}?name=${name}`)
         .subscribe((result) => {
-          console.log(result);
+          this.startChat(result);
         });
     }
   }
@@ -81,11 +84,48 @@ export class AppComponent implements OnInit {
   public sendMessage() {
     if (this.chatForm.valid) {
       let message = this.chatForm.value;
-      this.mqttService.unsafePublish('chat_des', JSON.stringify(message), {
-        qos: 0,
-        retain: false,
-      });
+      message = DES.encrypt(JSON.stringify(message), this.masterKey);
+      this.mqttService.unsafePublish(
+        'chat_des',
+        JSON.stringify(message, this.refReplacer()),
+        {
+          qos: 0,
+          retain: false,
+        }
+      );
     }
+  }
+
+  public startChat(msgs: any) {
+    msgs = JSON.parse(msgs.puzzles);
+    let { key, msg } = breakPuzzle(msgs);
+    this.masterKey = getMasterKey(msg);
+    let data = { key, clientId: this.clientId };
+    this.mqttService.unsafePublish('start', JSON.stringify(data), {
+      qos: 0,
+      retain: false,
+    });
+  }
+
+  public listenStartChat() {
+    this.mqttService.observe('start').subscribe((message: IMqttMessage) => {
+      if (!message.retain) {
+        let messageReceveid = JSON.parse(message.payload.toString());
+        if (messageReceveid.clientId != this.clientId) {
+          let keyIndex = this.keys.findIndex(
+            (key: any) => key == messageReceveid.key
+          );
+          this.masterKey = this.secrets[keyIndex];
+        }
+      }
+    });
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop =
+        this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) {}
   }
 
   refReplacer() {

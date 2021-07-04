@@ -1,46 +1,40 @@
-.padding {
-  padding-left: 30rem;
-  padding-right: 30rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+.container {
+  border: solid 1px black;
+  height: calc(100vh - 2rem);
+  border-radius: 1%;
+  position: relative;
+  margin-top: 1rem;
 
-  .container {
-    border: solid 1px black;
+  .full-height {
     height: calc(100vh - 2rem);
-    border-radius: 1%;
-    // position: relative;
-
-    .full-height {
-      height: calc(100vh - 2rem);
-    }
-
-    // .messages {
-    //   max-height: 42rem;
-    //   overflow: auto;
-    //   position: absolute;
-    //   width: 100%;
-    //   bottom: 2.75rem;
-    // }
-
-    // form {
-    //   position: absolute;
-    //   bottom: 0;
-    //   width: 100%;
-    // }
   }
 
-  // .card {
-  //   margin-bottom: 0.5rem;
-  // }
+  .messages {
+    max-height: 55rem;
+    overflow: auto;
+    position: absolute;
+    width: 100%;
+    bottom: 3.75rem;
+  }
 
-  // .sent {
-  //   margin-left: 10rem;
-  //   background-color: #f39c12;
-  //   text-align: right;
-  // }
+  .form-messages {
+    position: absolute;
+    bottom: 1rem;
+    width: 100%;
+  }
+}
 
-  // .received {
-  //   margin-right: 10rem;
-  //   background-color: #d2d6de;
-  // }
+.card {
+  margin-bottom: 0.5rem;
+}
+
+.sent {
+  margin-left: 10rem;
+  background-color: #f39c12;
+  text-align: right;
+}
+
+.received {
+  margin-right: 10rem;
+  background-color: #d2d6de;
 }
