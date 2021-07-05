@@ -1,21 +1,32 @@
 <div class="container">
   <div *ngIf="!masterKey.length">
     <div class="row">
-      <form [formGroup]="createRoomForm" class="col-12 mt-5" (ngSubmit)="createRoom()">
+      <form
+        [formGroup]="createRoomForm"
+        class="col-12 mt-5"
+        (ngSubmit)="createRoom()"
+      >
         <div class="row">
           <div class="col">
             <input type="text" class="form-control" formControlName="name" />
           </div>
           <div class="col-auto">
-            <button [disabled]="!createRoomForm.valid" class="btn btn-primary">
+            <button [disabled]="!createRoomForm.valid || label.length" class="btn btn-primary">
               CRIAR SALA
             </button>
+          </div>
+          <div class="col-12">
+            <small>{{ label }}</small>
           </div>
         </div>
       </form>
     </div>
     <div class="row">
-      <form [formGroup]="enterRoomForm" class="col-12 mt-5" (ngSubmit)="enterRoom()">
+      <form
+        [formGroup]="enterRoomForm"
+        class="col-12 mt-5"
+        (ngSubmit)="enterRoom()"
+      >
         <div class="row">
           <div class="col">
             <input type="text" class="form-control" formControlName="name" />
@@ -32,12 +43,19 @@
   <div *ngIf="masterKey.length">
     <div class="row messages" id="messages" #scrollMe>
       <div class="col-12" *ngFor="let message of messages">
-        <div class="card" [ngClass]="message.client == clientId ? 'sent' : 'received'">
+        <div
+          class="card"
+          [ngClass]="message.client == clientId ? 'sent' : 'received'"
+        >
           <div class="card-body">{{ message.message }}</div>
         </div>
       </div>
     </div>
-    <form [formGroup]="chatForm" class="row form-messages" (ngSubmit)="sendMessage()">
+    <form
+      [formGroup]="chatForm"
+      class="row form-messages"
+      (ngSubmit)="sendMessage()"
+    >
       <div class="col">
         <input type="text" class="form-control" formControlName="message" />
       </div>

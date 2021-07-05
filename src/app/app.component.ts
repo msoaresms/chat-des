@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   public keys: any = [];
   public secrets: any = [];
   public masterKey = '';
+  public label = "";
 
   public createRoomForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -66,7 +67,10 @@ export class AppComponent implements OnInit {
 
       let data = this.createRoomForm.value;
       data.puzzles = JSON.stringify(this.msgs, this.refReplacer());
-      this.http.post(CREATE_ROOM_ENDPOINT, data).subscribe((result) => {});
+      this.http.post(CREATE_ROOM_ENDPOINT, data).subscribe((result) => {
+        this.createRoomForm.controls.name.disable();
+        this.label = "Sala criada. Aguardando conexão..."
+      });
     }
   }
 
@@ -93,6 +97,7 @@ export class AppComponent implements OnInit {
           retain: false,
         }
       );
+      this.chatForm.controls.message.patchValue("");
     }
   }
 
